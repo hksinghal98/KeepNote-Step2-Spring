@@ -35,15 +35,15 @@ public class ApplicationContextConfig {
 	@Bean
 	public DataSource getDataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUsername("root");
-		dataSource.setPassword("Root@123");
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/NoteRepository");
+//		dataSource.setUsername("root");
+//		dataSource.setPassword("Root@123");
 //		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-//		dataSource.setUrl("jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":3306/" + System.getenv("MYSQL_DATABASE")
-//				+"?verifyServerCertificate=false&useSSL=false&requireSSL=false");
-//		dataSource.setUsername(System.getenv("MYSQL_USER"));
-//		dataSource.setPassword(System.getenv("MYSQL_PASSWORD"));
+//		dataSource.setUrl("jdbc:mysql://localhost:3306/NoteRepository");
+		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		dataSource.setUrl("jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":3306/" + System.getenv("MYSQL_DATABASE")
+				+"?verifyServerCertificate=false&useSSL=false&requireSSL=false");
+		dataSource.setUsername(System.getenv("MYSQL_USER"));
+		dataSource.setPassword(System.getenv("MYSQL_PASSWORD"));
 		return dataSource;
 	}
 	/*
