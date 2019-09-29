@@ -2,9 +2,15 @@ package com.stackroute.keepnote.dao;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.stackroute.keepnote.model.Note;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 /*
  * This class is implementing the NoteDAO interface. This class has to be annotated with @Repository
@@ -15,15 +21,25 @@ import com.stackroute.keepnote.model.Note;
  * 					transaction. The database transaction happens inside the scope of a persistence 
  * 					context.  
  * */
-
+@Repository
+@Transactional
 public class NoteDAOImpl implements NoteDAO {
-
 	/*
 	 * Autowiring should be implemented for the SessionFactory.
 	 */
 
-	public NoteDAOImpl(SessionFactory sessionFactory) {
+	private SessionFactory sessionFactory;
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
 
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	@Autowired
+	public NoteDAOImpl(SessionFactory sessionFactory) {
+		this.sessionFactory =sessionFactory;
 	}
 
 	/*
@@ -31,8 +47,10 @@ public class NoteDAOImpl implements NoteDAO {
 	 */
 
 	public boolean saveNote(Note note) {
-		return false;
-
+		Session session = sessionFactory.getCurrentSession();
+		session.save(note);
+		session.flush();
+		return true;
 	}
 
 	/*
@@ -40,7 +58,11 @@ public class NoteDAOImpl implements NoteDAO {
 	 */
 
 	public boolean deleteNote(int noteId) {
-		return false;
+		System.out.println("ion delete note");
+		Session session = sessionFactory.getCurrentSession();
+		session.delete(getNoteById(noteId));
+		session.flush();
+		return true;
 
 	}
 
@@ -49,23 +71,32 @@ public class NoteDAOImpl implements NoteDAO {
 	 * order(showing latest note first)
 	 */
 	public List<Note> getAllNotes() {
-		return null;
-
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from Note");
+		List<Note> list = ((org.hibernate.query.Query) query).list();
+		return list;
 	}
 
 	/*
 	 * retrieve specific note from the database(note) table
 	 */
 	public Note getNoteById(int noteId) {
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		Note note = session.get(Note.class, noteId);
+		session.flush();
+		return note;
 
 	}
 
 	/* Update existing note */
 
 	public boolean UpdateNote(Note note) {
-		return false;
+		Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(note);
+		session.flush();
+		return true;
 
 	}
+
 
 }
